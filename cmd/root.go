@@ -24,6 +24,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+const service = "go-vpn"
+
 var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands

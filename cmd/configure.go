@@ -25,11 +25,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const service = "go-vpn"
-
 var configureCmd = &cobra.Command{
 	Use:   "configure",
-	Short: "Configures the Google Authenticator account",
+	Short: "Configures the account in Security Keychain",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) < 2 {
@@ -44,7 +42,7 @@ var configureCmd = &cobra.Command{
 			log.Printf("Running security failed: %v", err)
 		}
 
-		fmt.Printf("%s\n", b)
+		fmt.Printf("%s", b)
 	},
 }
 

@@ -21,13 +21,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// connectCmd represents the connect command
 var connectCmd = &cobra.Command{
 	Use:   "connect",
 	Short: "Connects to the specified VPN",
 	Long: ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("connect called")
+
 	},
 }
 
