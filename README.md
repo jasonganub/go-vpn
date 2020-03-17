@@ -19,7 +19,7 @@ This CLI is intended for simplying the process of connecting to VPNs on MacOS th
 
 `go-vpn configure airbnb pass123`
 
-
+`go-vpn getOtp gojek`
 
 go-vpn connect int
 
