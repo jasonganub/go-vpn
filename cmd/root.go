@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 NAME HERE <EMAIL ADDRESS>
+Copyright © 2020 Jason Ganub <jasonganub@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "go-vpn",
-	Short: "A brief description of your application",
+	Short: "Go (golang) CLI to connect to VPNs that require Google Authenticator",
 	Long: `A longer description that spans multiple lines and likely contains
 examples and usage of using your application. For example:
 

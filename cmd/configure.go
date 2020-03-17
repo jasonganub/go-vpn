@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 Jason Ganub jasonganub@gmail.com
+Copyright © 2020 Jason Ganub <jasonganub@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,17 +17,34 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"os/exec"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
 
-// configureCmd represents the configure command
+const service = "go-vpn"
+
 var configureCmd = &cobra.Command{
 	Use:   "configure",
 	Short: "Configures the Google Authenticator account",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("configure called")
+		if len(args) < 2 {
+			fmt.Println("Invalid number of arguments. Please pass in the account and password.")
+			os.Exit(1)
+		}
+		commandStr := fmt.Sprintf("/usr/bin/security add-generic-password -a %s -s %s -w %s", args[0], service, args[1])
+		args = strings.Split(commandStr, " ")
+		command := exec.Command(args[0], args[1:]...)
+		b, err := command.CombinedOutput()
+		if err != nil {
+			log.Printf("Running security failed: %v", err)
+		}
+
+		fmt.Printf("%s\n", b)
 	},
 }
 
