@@ -30,7 +30,32 @@ import (
 	"strings"
 )
 
-// getOtpCmd represents the getOtp command
+func getOtpKey(account string) (*string, error) {
+	commandStr := fmt.Sprintf("/usr/bin/security find-generic-password -a %s -s %s -w", account, service)
+	args := strings.Split(commandStr, " ")
+	command := exec.Command(args[0], args[1:]...)
+	otpKey, err := command.CombinedOutput()
+	if err != nil {
+		return nil, err
+	}
+
+	otpKeyStr := strings.Replace(fmt.Sprintf("%s", otpKey), "\n", "", 1)
+	return &otpKeyStr, nil
+}
+
+func GetOtp(otpKey string) (*string, error) {
+	commandStr := fmt.Sprintf("/usr/local/bin/oathtool --totp -b %s", otpKey)
+	args := strings.Split(commandStr, " ")
+	command := exec.Command(args[0], args[1:]...)
+	otp, err := command.CombinedOutput()
+	if err != nil {
+		return nil, err
+	}
+
+	otpStr := strings.Replace(fmt.Sprintf("%s", otp), "\n", "", 1)
+	return &otpStr, nil
+}
+
 var getOtpCmd = &cobra.Command{
 	Use:   "getOtp",
 	Short: "Gets the OTP from the account in Security Keychain",
@@ -41,24 +66,17 @@ var getOtpCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		commandStr := fmt.Sprintf("/usr/bin/security find-generic-password -a %s -s %s -w", args[0], service)
-		args = strings.Split(commandStr, " ")
-		command := exec.Command(args[0], args[1:]...)
-		otpKey, err := command.CombinedOutput()
+		otpKey, err := getOtpKey(args[0])
 		if err != nil {
 			log.Printf("Getting OTP Key failed: %v", err)
 		}
 
-		otpKeyStr := strings.Replace(fmt.Sprintf("%s", otpKey), "\n", "", 1)
-		commandStr = fmt.Sprintf("/usr/local/bin/oathtool --totp -b %s", otpKeyStr)
-		args = strings.Split(commandStr, " ")
-		command = exec.Command(args[0], args[1:]...)
-		otp, err := command.CombinedOutput()
+		otp, err := GetOtp(*otpKey)
 		if err != nil {
 			log.Printf("Getting OTP failed: %v", err)
 		}
 
-		fmt.Printf("%s", otp)
+		fmt.Printf("%s", *otp)
 	},
 }
 
