@@ -67,7 +67,7 @@ var configureCmd = &cobra.Command{
 		if *genericPasswordExists == true {
 			reader := bufio.NewReader(os.Stdin)
 			var answer string
-			fmt.Println("A generic password already exists for this account, enter y if you want to overwrite it? ")
+			fmt.Println("A generic password already exists for this account, enter y if you want to overwrite it")
 			answer, _ = reader.ReadString('\n')
 			answerTrimmed := strings.TrimSpace(answer)
 			if answerTrimmed != "y" {
