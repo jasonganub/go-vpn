@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"log"
@@ -56,15 +57,40 @@ var configureCmd = &cobra.Command{
 			fmt.Println("Invalid number of arguments. Please pass in the account and password.")
 			os.Exit(1)
 		}
+
+		genericPasswordExists, err := genericPasswordExists(args[0])
+		if err != nil {
+			log.Printf("Getting generic password failed: %v", err)
+			os.Exit(1)
+		}
+
+		if *genericPasswordExists == true {
+			reader := bufio.NewReader(os.Stdin)
+			var answer string
+			fmt.Println("A generic password already exists for this account, enter y if you want to overwrite it? ")
+			answer, _ = reader.ReadString('\n')
+			answerTrimmed := strings.TrimSpace(answer)
+			if answerTrimmed != "y" {
+				fmt.Printf("Aborting adding the generic password for %s", args[0])
+				os.Exit(0)
+			}
+
+			err := deleteGenericPassword(args[0])
+			if err != nil {
+				fmt.Printf("Failed deleting generic password for %s", args[0])
+				os.Exit(1)
+			}
+		}
+
 		commandStr := fmt.Sprintf("/usr/bin/security add-generic-password -a %s -s %s -w %s", args[0], service, args[1])
-		args = strings.Split(commandStr, " ")
-		command := exec.Command(args[0], args[1:]...)
-		b, err := command.CombinedOutput()
+		commmandArgs := strings.Split(commandStr, " ")
+		command := exec.Command(commmandArgs[0], commmandArgs[1:]...)
+		_, err = command.CombinedOutput()
 		if err != nil {
 			log.Printf("Running security failed: %v", err)
 		}
 
-		fmt.Printf("%s", b)
+		fmt.Printf("Success adding generic password for %s", args[0])
 	},
 }
 
