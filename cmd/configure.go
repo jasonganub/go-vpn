@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -32,6 +33,18 @@ func genericPasswordExists(account string) (*bool, error) {
 	b, _ := command.CombinedOutput()
 	result := strings.Contains(fmt.Sprintf("%s", b), "attributes:")
 	return &result, nil
+}
+
+func deleteGenericPassword(account string) error {
+	commandStr := fmt.Sprintf("/usr/bin/security delete-generic-password -a %s -s %s", account, service)
+	args := strings.Split(commandStr, " ")
+	command := exec.Command(args[0], args[1:]...)
+	b, _ := command.CombinedOutput()
+	result := strings.Contains(fmt.Sprintf("%s", b), "password has been deleted")
+	if result != true {
+		return errors.New(fmt.Sprintf("Password could not be deleted because it does not exist for %v", account ))
+	}
+	return nil
 }
 
 var configureCmd = &cobra.Command{
