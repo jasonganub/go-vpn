@@ -66,14 +66,27 @@ var getOtpCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		genericPasswordExists, err := genericPasswordExists(args[0])
+		if err != nil {
+			log.Printf("Getting generic password failed: %v", err)
+			os.Exit(1)
+		}
+
+		if *genericPasswordExists != true {
+			log.Printf("Please run configure first before getting the OTP for %s", args[0])
+			os.Exit(1)
+		}
+
 		otpKey, err := getOtpKey(args[0])
 		if err != nil {
 			log.Printf("Getting OTP Key failed: %v", err)
+			os.Exit(1)
 		}
 
 		otp, err := GetOtp(*otpKey)
 		if err != nil {
-			log.Printf("Getting OTP failed: %v", err)
+			log.Printf("Getting OTP Key failed, please run configure again with a valid password for %v", args[0])
+			os.Exit(1)
 		}
 
 		fmt.Printf("%s", *otp)

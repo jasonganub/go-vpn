@@ -25,6 +25,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func genericPasswordExists(account string) (*bool, error) {
+	commandStr := fmt.Sprintf("/usr/bin/security find-generic-password -a %s -s %s", account, service)
+	args := strings.Split(commandStr, " ")
+	command := exec.Command(args[0], args[1:]...)
+	b, _ := command.CombinedOutput()
+	result := strings.Contains(fmt.Sprintf("%s", b), "attributes:")
+	return &result, nil
+}
+
 var configureCmd = &cobra.Command{
 	Use:   "configure",
 	Short: "Configures the account in Security Keychain",
