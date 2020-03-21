@@ -83,8 +83,8 @@ var configureCmd = &cobra.Command{
 		}
 
 		commandStr := fmt.Sprintf("/usr/bin/security add-generic-password -a %s -s %s -w %s", args[0], service, args[1])
-		commmandArgs := strings.Split(commandStr, " ")
-		command := exec.Command(commmandArgs[0], commmandArgs[1:]...)
+		commandArgs := strings.Split(commandStr, " ")
+		command := exec.Command(commandArgs[0], commandArgs[1:]...)
 		_, err = command.CombinedOutput()
 		if err != nil {
 			log.Printf("Running security failed: %v", err)
