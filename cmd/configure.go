@@ -45,6 +45,8 @@ func deleteGenericPassword(account string) error {
 	if result != true {
 		return errors.New(fmt.Sprintf("Password could not be deleted because it does not exist for %v", account ))
 	}
+
+	fmt.Printf("Success deleting generic password for %s", args[0])
 	return nil
 }
 
