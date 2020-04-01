@@ -30,19 +30,6 @@ import (
 	"strings"
 )
 
-func getOtpKey(account string) (*string, error) {
-	commandStr := fmt.Sprintf("/usr/bin/security find-generic-password -a %s -s %s -w", account, service)
-	args := strings.Split(commandStr, " ")
-	command := exec.Command(args[0], args[1:]...)
-	otpKey, err := command.CombinedOutput()
-	if err != nil {
-		return nil, err
-	}
-
-	otpKeyStr := strings.Replace(fmt.Sprintf("%s", otpKey), "\n", "", 1)
-	return &otpKeyStr, nil
-}
-
 func GetOtp(otpKey string) (*string, error) {
 	commandStr := fmt.Sprintf("/usr/local/bin/oathtool --totp -b %s", otpKey)
 	args := strings.Split(commandStr, " ")
