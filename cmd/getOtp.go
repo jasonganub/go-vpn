@@ -77,15 +77,9 @@ var getOtpCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		otpKey, err := getOtpKey(args[0])
+		otp, err := GetOtp(args[0])
 		if err != nil {
-			log.Printf("Getting OTP Key failed: %v", err)
-			os.Exit(1)
-		}
-
-		otp, err := GetOtp(*otpKey)
-		if err != nil {
-			log.Printf("Getting OTP Key failed, please run configure again with a valid password for %v", args[0])
+			log.Printf("Getting OTP failed, please run configure again with a valid password for %v", args[0])
 			os.Exit(1)
 		}
 
