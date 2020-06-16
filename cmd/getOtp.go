@@ -70,7 +70,7 @@ var getOtpCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		fmt.Printf("%s", *otp)
+		fmt.Println(*otp)
 	},
 }
 
